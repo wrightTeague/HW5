@@ -1,0 +1,20 @@
+# Compiled executables built by the Makefile
+graph-tests
+bpq-tests
+dijkstra
+
+# Debug symbol bundles that g++ -g leaves behind on macOS
+*.dSYM/
+
+# macOS Finder metadata
+.DS_Store
+
+# Editor settings
+.vscode/
+
+# Local learning notes, not part of the submission
+.vibe-wise/
+
+# Assignment PDFs and header image - kept locally for reference, not part of the submission
+*.pdf
+Graph.h.png
