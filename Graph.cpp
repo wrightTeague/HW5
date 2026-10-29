@@ -45,6 +45,7 @@ const GraphEdge* Graph::AddEdge(nodekey_t fromNodeKey, nodekey_t toNodeKey, unsi
     edge->to = toNodeKey;
     edge->weight = weight;
     edges[index].push_back(edge);
+    numEdges++;
     return edge;
 }
 
@@ -70,8 +71,23 @@ string Graph::NodesToString() const {
 }
 
 string Graph::EdgesToString() const {
-    // TODO:
-    return "";
+    if (edges.empty()) {
+        return "[]";
+    }
+    bool first = true;
+    string ans = "[";
+    for (size_t i = 0; i < edges.size(); i++) {
+        nodekey_t currNode = keys[i];
+        for (size_t j = 0; j < edges[i].size(); j++) {
+            GraphEdge* currEdge = edges[i][j];
+            if (!first) { ans += ", "; }
+            ans += "((" + to_string(currNode) + ")->(" + to_string(currEdge->to) + ") w:" + to_string(currEdge->weight) + ")";
+            first = false;
+        }
+
+    }
+    ans += "]";
+    return ans;
 }
 
 set<const GraphEdge*> Graph::GetOutwardEdgesFrom(nodekey_t nodeKey) const {
@@ -87,18 +103,16 @@ set<const GraphEdge*> Graph::GetOutwardEdgesFrom(nodekey_t nodeKey) const {
 }
 
 set<nodekey_t> Graph::GetNodes() const {
-    // TODO:
+    
     return {};
 }
 
 size_t Graph::Size() const {
-    // TODO:
-    return 0;
+    return numEdges;
 }
 
 size_t Graph::Order() const {
-    // TODO:
-    return 0;
+    return keys.size();
 }
 // Key must always be present!! check IsPresent always
 size_t Graph::IndexOf(nodekey_t key) const {
