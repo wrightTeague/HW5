@@ -57,7 +57,7 @@ class Graph {
         size_t Size() const; // num edges
         size_t Order() const; // num nodes
 
-    private: // teague time
+    private:
         vector<nodekey_t> keys; // one key per node
         vector<vector<GraphEdge*>> edges; // edges[i] = heap edges that keys[i] goes to
         size_t IndexOf(nodekey_t key) const; // helper,  takes a key and returns the index of that key
