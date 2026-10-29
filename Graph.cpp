@@ -15,7 +15,11 @@ Graph::Graph(const Graph &other) {
 }
 
 Graph::~Graph() {
-    // TODO: delete every heap GraphEdge
+    for (size_t i = 0; i < edges.size(); i++) {
+        for (size_t j = 0; j < edges[i].size(); j++) {
+            delete edges[i][j];
+        }
+    }
 }
 
 void Graph::AddNode(nodekey_t key) {
@@ -103,8 +107,11 @@ set<const GraphEdge*> Graph::GetOutwardEdgesFrom(nodekey_t nodeKey) const {
 }
 
 set<nodekey_t> Graph::GetNodes() const {
-    
-    return {};
+    set<nodekey_t> ans = {};
+    for (nodekey_t k : keys) {
+        ans.insert(k);
+    }
+    return ans;
 }
 
 size_t Graph::Size() const {
