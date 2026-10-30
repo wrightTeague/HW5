@@ -43,11 +43,19 @@ bool BetterPriorityQueue::Update(BPQNode n) {
 }
 
 string BetterPriorityQueue::ToString() const {
-    // TODO:
-    return "";
+    if (c.empty()) {
+        return "[]";
+    }
+    bool first = true;
+    string ans = "[";
+    for (BPQNode n : c) {
+        if (!first) { ans += ", "; }
+        ans += BPQNodeToString(n);
+        first = false;
+    }
+    return ans += "]";
 }
 
 string BetterPriorityQueue::BPQNodeToString(BPQNode n) {
-    // TODO:
-    return "";
+    return "(" + to_string(n.gnode) + ", pri: " + to_string(n.pri) + ")";
 }
