@@ -1,4 +1,5 @@
-
+// Author: Teague Wright
+// Tests provided by the professor. Claude (Anthropic) wrote ToStringTest and HeapOrderTest.
 
 #include "Graph.h"
 #include "BetterPriorityQueue.h"
@@ -112,10 +113,71 @@ void UpdateTest() {
 	cout << "PASSED!" << endl;
 }
 
+void ToStringTest() {
+	cout << "Testing ToString..." << endl;
+	
+	BetterPriorityQueue q;
+	assert(q.ToString() == "[]");
+	
+	BPQNode n;
+	n.gnode = 6;
+	n.pri = 0;
+	assert(BetterPriorityQueue::BPQNodeToString(n) == "(6, pri: 0)");
+	
+	q.push(n);
+	assert(q.ToString() == "[(6, pri: 0)]");
+	
+	cout << "PASSED!" << endl;
+}
+
+void HeapOrderTest() {
+	cout << "Testing heap order after Update..." << endl;
+	
+	BetterPriorityQueue q;
+	for (nodekey_t k = 1; k <= 7; k++) {
+		BPQNode n;
+		n.gnode = k;
+		n.pri = k * 10;
+		q.push(n);
+	}
+	
+	// node 7 has to climb two levels to become the new root
+	BPQNode lower;
+	lower.gnode = 7;
+	lower.pri = 5;
+	assert(q.Update(lower) == true);
+	assert(q.top().gnode == 7);
+	
+	// an equal priority isn't a change
+	assert(q.Update(lower) == false);
+	
+	// lowering node 5 without passing node 1 leaves the same root
+	lower.gnode = 5;
+	lower.pri = 15;
+	assert(q.Update(lower) == true);
+	assert(q.top().gnode == 7);
+	
+	// a valid heap has to give everything back in priority order
+	nodekey_t expected[] = {7, 1, 5, 2, 3, 4, 6};
+	for (nodekey_t k : expected) {
+		assert(q.top().gnode == k);
+		q.pop();
+	}
+	assert(q.empty());
+	
+	// popped nodes are gone, so they can't be updated
+	assert(q.Contains(lower) == false);
+	assert(q.Update(lower) == false);
+	
+	cout << "PASSED!" << endl;
+}
+
 int main(){
 	
 	ContainsTest();
 	UpdateTest();
+	ToStringTest();
+	HeapOrderTest();
 	
 	cout << "ALL TESTS PASSED!!" << endl;
 	

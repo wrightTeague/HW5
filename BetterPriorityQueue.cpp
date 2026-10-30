@@ -1,5 +1,5 @@
 // Author: Teague Wright
-// Used Claude (Anthropic) to generate the initial empty method stubs and to review my code.
+// Used Claude (Anthropic) to generate the initial empty method stubs and to review my code. Claude added the comments in Update.
 
 #include "BetterPriorityQueue.h"
 
@@ -25,9 +25,11 @@ bool BetterPriorityQueue::Update(BPQNode n) {
             break;
         }
     }
+    // Dijkstra only ever lowers a distance, so a larger priority is ignored on purpose (BPQTests requires this).
     if (n.pri >= this->c[index].pri) {
         return false;
     } else {
+        // A smaller priority can't break the heap below this node, so it only ever needs to move up.
         this->c[index].pri = n.pri;
         while (index != 0) {
             size_t parent = (index - 1) / 2;

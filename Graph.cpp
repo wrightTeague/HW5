@@ -1,5 +1,5 @@
 // Author: Teague Wright
-// Used Claude (Anthropic) to generate the initial empty method stubs and to review my code.
+// Used Claude (Anthropic) to generate the initial empty method stubs and to review my code. Claude wrote the copy constructor.
 
 #include "Graph.h"
 #include <stdexcept>
@@ -7,11 +7,18 @@
 using namespace std;
 
 Graph::Graph() {
-    // TODO:
 }
 
+// Goes through AddEdge so the copy gets its own heap edges; sharing them would make both destructors delete them.
 Graph::Graph(const Graph &other) {
-    // TODO: (ungraded)
+    for (nodekey_t k : other.keys) {
+        AddNode(k);
+    }
+    for (const vector<GraphEdge*> &row : other.edges) {
+        for (const GraphEdge* e : row) {
+            AddEdge(e->from, e->to, e->weight);
+        }
+    }
 }
 
 Graph::~Graph() {
@@ -63,6 +70,7 @@ bool Graph::IsPresent(nodekey_t key) const {
 }
 
 string Graph::NodesToString() const {
+    // size() is unsigned, so size() - 1 would wrap around to a huge number on an empty graph
     if (keys.empty()) {
         return "[]";
     }
@@ -121,7 +129,7 @@ size_t Graph::Size() const {
 size_t Graph::Order() const {
     return keys.size();
 }
-// Key must always be present!! check IsPresent always
+// Callers must check IsPresent first: a missing key returns keys.size(), which is out of bounds for edges.
 size_t Graph::IndexOf(nodekey_t key) const {
     size_t pos = keys.size();
     for (size_t i = 0; i < keys.size(); i++) {

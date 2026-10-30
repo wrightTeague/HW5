@@ -1,4 +1,5 @@
-
+// Author: Teague Wright
+// Tests provided by the professor. Claude (Anthropic) wrote the additional tests at the "more tests" spots.
 
 #include "Graph.h"
 #include <iostream>
@@ -79,7 +80,19 @@ void TestAddEdge(){
 	} catch (const invalid_argument& e) {}
 
 
-	// more tests go here!
+	// a reverse edge is a different edge, since the graph is directed
+	g.AddEdge(9, 15, 4);
+	assert(g.Size() == 3);
+
+	try
+	{
+		g.AddEdge(15, 20);
+		assert(false);
+	} catch (const invalid_argument& e) {}
+
+	Graph empty = Graph();
+	assert(empty.NodesToString() == "[]");
+	assert(empty.EdgesToString() == "[]");
 	
 	cout << "PASSED!" << endl << endl;
 }
@@ -88,7 +101,14 @@ void TestAddEdge(){
 void TestIsPresentSizeAndOrder() {
 	cout << "Testing IsPresent, Size, and Order..." << endl;
 	
-	// more tests go here!
+	Graph g = Graph();
+	g.AddNode(1);
+	g.AddNode(2);
+	g.AddEdge(1, 2, 5);
+	assert(g.Size() == 1);
+	assert(g.Order() == 2);
+	assert(g.IsPresent(1) == true);
+	assert(g.IsPresent(3) == false);
 
 	Graph g2 = Graph();
 	assert(g2.Size() == 0);
@@ -123,7 +143,13 @@ void TestGetOutwardEdgesFrom(){
 	assert(result == soln);
 
 
-	// more tests go here!
+	assert(g.GetOutwardEdgesFrom(18).empty());
+
+	try
+	{
+		g.GetOutwardEdgesFrom(99);
+		assert(false);
+	} catch (const invalid_argument& e) {}
 	
 	
 	cout << "PASSED!" << endl << endl;
@@ -155,6 +181,28 @@ void TestGetNodes(){
 }
 
 
+
+
+void TestCopyConstructor(){
+	cout << "Testing Copy Constructor..." << endl;
+	Graph g = Graph();
+	g.AddNode(1);
+	g.AddNode(2);
+	g.AddEdge(1, 2, 5);
+
+	Graph copy = Graph(g);
+	assert(copy.NodesToString() == g.NodesToString());
+	assert(copy.EdgesToString() == g.EdgesToString());
+	assert(copy.Size() == 1);
+
+	// the copy owns separate edges, so changing it leaves the original alone
+	copy.AddEdge(2, 1, 3);
+	assert(copy.Size() == 2);
+	assert(g.Size() == 1);
+	assert(*g.GetOutwardEdgesFrom(1).begin() != *copy.GetOutwardEdgesFrom(1).begin());
+
+	cout << "PASSED!" << endl << endl;
+}
 
 
 void TestDestructor(){
@@ -191,6 +239,7 @@ int main(){
 	TestIsPresentSizeAndOrder();
 	TestGetOutwardEdgesFrom();
 	TestGetNodes();
+	TestCopyConstructor();
 	TestDestructor();
 
 	
