@@ -15,8 +15,31 @@ bool BetterPriorityQueue::Contains(const BPQNode &n) const {
 }
 
 bool BetterPriorityQueue::Update(BPQNode n) {
-    if ()
-    return false;
+    if (!Contains(n)) {
+        return false;
+    }
+    size_t index = ULLONG_MAX;
+    for (size_t i = 0; i < this->c.size(); i++) {
+        if (this->c[i] == n) {
+            index = i;
+            break;
+        }
+    }
+    if (n.pri >= this->c[index].pri) {
+        return false;
+    } else {
+        this->c[index].pri = n.pri;
+        while (index != 0) {
+            size_t parent = (index - 1) / 2;
+            if (this->c[parent].pri > n.pri) {
+                std::swap(this->c[parent], this->c[index]);
+                index = parent;
+            } else {
+                break;
+            }
+        }
+    }
+    return true;
 }
 
 string BetterPriorityQueue::ToString() const {
